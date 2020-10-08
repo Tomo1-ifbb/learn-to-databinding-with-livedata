@@ -15,16 +15,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //？よくわからないけどActivtiyで指定しているtypeのことっぽい
         val mainViewModel = ViewModelProviders.of(this)
                 .get(MainViewModel::class.java)
 
+        //Data Binding の設定　
+        //thisというのはMainActivityのこと
+        //LiveDataがLifecycleを追える？ようにlifecyleOwnerを指定すること
         DataBindingUtil.setContentView<ActivityMainBinding>(
                 this, R.layout.activity_main
         ).apply {
-            this.setLifecycleOwner(this@MainActivity)
+            this.lifecycleOwner = this@MainActivity
             this.viewmodel = mainViewModel
         }
 
+        // LiveDataの役割 observe 編集されたStringデータが変更される度にToastで設定された文言を表示
         mainViewModel.editTextContent.observe(this, Observer {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         })
